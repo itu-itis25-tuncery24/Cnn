@@ -165,20 +165,9 @@
         }
 
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.1);
-                opacity: 0.7;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .scan-check {
@@ -193,9 +182,7 @@
         }
 
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
         #step-3 {
@@ -241,12 +228,46 @@
             color: var(--danger-color);
         }
 
+        /* Çıkış ve Giriş Animasyonları */
         @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        @keyframes fadeOutUp {
+            to { opacity: 0; transform: translateY(-30px); }
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* 4. Adım: Final Ekranı */
+        #step-4 {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+            animation: popIn 1s forwards;
+        }
+
+        #step-4 i {
+            font-size: 3.5rem;
+            color: var(--main-color);
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        #step-4 h2 {
+            font-size: 2rem;
+            line-height: 1.4;
+        }
+
     </style>
 </head>
 
@@ -262,8 +283,7 @@
         </div>
 
         <button type="button" class="main-btn" onclick="goToScan()">Sisteme Bağlan</button>
-        <p id="errorMsg"
-            style="color: var(--danger-color); margin-top: 20px; font-size: 14px; display: none; font-weight: 700;"></p>
+        <p id="errorMsg" style="color: var(--danger-color); margin-top: 20px; font-size: 14px; display: none; font-weight: 700;"></p>
     </div>
 
     <div class="container" id="step-2">
@@ -279,9 +299,7 @@
             <div class="scan-check" id="scanCheck"></div>
         </div>
 
-        <p id="scanStatus"
-            style="font-size: 15px; color: var(--main-color); display: none; font-weight: 800; margin-top: 10px;">Analiz
-            ediliyor...</p>
+        <p id="scanStatus" style="font-size: 15px; color: var(--main-color); display: none; font-weight: 800; margin-top: 10px;">Analiz ediliyor...</p>
     </div>
 
     <div class="container" id="step-3">
@@ -289,8 +307,12 @@
             <h2>Analiz Tamamlandı</h2>
             <p style="color: var(--main-color);">Hedef: CANAN</p>
         </div>
-
         <div id="resultsArea"></div>
+    </div>
+
+    <div class="container" id="step-4">
+        <i class="fas fa-moon"></i>
+        <h2>İyi geceler<br>sevdiğim ❤️</h2>
     </div>
 
     <script>
@@ -300,14 +322,12 @@
             const nameInput = document.getElementById('nameInput').value.trim().toLowerCase();
             const errorMsg = document.getElementById('errorMsg');
 
-            // Boş bırakılırsa uyarı ver
             if (nameInput === "") {
                 errorMsg.innerText = "Lütfen isminizi girin.";
                 errorMsg.style.display = 'block';
                 return;
             }
 
-            // Yanlış isim girilirse uyarı ver
             if (nameInput !== "canan") {
                 errorMsg.innerText = "SİSTEM UYARISI: Yetkisiz giriş! Bu yazılım sadece Canan için kodlanmıştır.";
                 errorMsg.style.display = 'block';
@@ -363,7 +383,7 @@
         function showResults() {
             const results = [
                 { text: "Unvan: Hemşire Hanım", icon: "fas fa-stethoscope" },
-                { text: "Gülüşü çokkk güzel", icon: "fas fa-book-reader" },
+                { text: "Gülüşü çokkk güzel", icon: "fas fa-smile-beam" }, // İkonu güncelledim
                 { text: "Aşırı tatlılık tespit edildi.", icon: "fas fa-heart" },
                 { text: "DİKKAT: Bulaşıcı bir hastalığa sahip!", icon: "fas fa-virus", class: "warning" },
                 { text: "Mucit beyin kalp ritmini tehlikeli derecede artırıyor... 💓", icon: "fas fa-heartbeat", class: "warning" }
@@ -372,6 +392,7 @@
             const area = document.getElementById('resultsArea');
             area.innerHTML = "";
 
+            // Sonuçları tek tek ekrana getir
             results.forEach((item, index) => {
                 setTimeout(() => {
                     const div = document.createElement('div');
@@ -380,6 +401,22 @@
                     area.appendChild(div);
                 }, index * 1200);
             });
+
+            // En son sonuç göründükten sonra çalışacak olan Kapanış Animasyonu
+            const finalTime = (results.length * 1200) + 4000; // Son yazıdan 4 saniye sonra kapanır
+
+            setTimeout(() => {
+                // Adım 3'ü yukarı doğru kaydırarak yok et
+                const step3 = document.getElementById('step-3');
+                step3.style.animation = "fadeOutUp 1s forwards";
+
+                // Animasyon bitince Adım 4'ü (Finali) göster
+                setTimeout(() => {
+                    step3.style.display = 'none';
+                    document.getElementById('step-4').style.display = 'block';
+                }, 1000); 
+
+            }, finalTime);
         }
     </script>
 </body>
