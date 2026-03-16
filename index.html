@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sisteme Giriş</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --main-color: #ff758c;
+            --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            --text-color: #555;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --danger-color: #ff4757;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        input {
+            user-select: auto;
+            -webkit-user-select: auto;
+        }
+
+        body {
+            background-image: var(--bg-gradient);
+            color: var(--text-color);
+            font-family: 'Nunito', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 380px;
+            padding: 35px 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 35px;
+            box-shadow: 0 15px 35px rgba(255, 117, 140, 0.15);
+            transition: 0.5s ease;
+        }
+
+        h2 {
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: var(--main-color);
+            font-size: 1.6rem;
+        }
+
+        h3 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        p {
+            font-weight: 600;
+            font-size: 0.95rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin: 25px 0;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--main-color);
+            font-size: 1.2rem;
+        }
+
+        #nameInput {
+            width: 100%;
+            padding: 16px 15px 16px 50px;
+            background: #fff;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            font-size: 1.05rem;
+            color: var(--text-color);
+            outline: none;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            text-transform: capitalize;
+            transition: 0.3s;
+        }
+
+        #nameInput:focus {
+            border-color: var(--main-color);
+        }
+
+        button.main-btn {
+            background: var(--main-color);
+            color: #fff;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.3);
+            width: 100%;
+            font-family: 'Nunito', sans-serif;
+            position: relative;
+            z-index: 10;
+        }
+
+        button.main-btn:active {
+            transform: scale(0.95);
+        }
+
+        #step-2 {
+            display: none;
+        }
+
+        .fingerprint-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fingerprint-btn {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 50%;
+            font-size: 50px;
+            color: var(--main-color);
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(255, 117, 140, 0.2);
+            -webkit-touch-callout: none;
+        }
+
+        .fingerprint-btn i {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .scan-check {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid var(--main-color);
+            border-top-color: transparent;
+            animation: spin 1s infinite linear;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #step-3 {
+            display: none;
+            text-align: left;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .trait {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 16px;
+            background: #fff;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.5s forwards;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .trait i {
+            margin-right: 15px;
+            font-size: 1.4rem;
+            color: var(--main-color);
+            width: 25px;
+            text-align: center;
+        }
+
+        .warning {
+            color: var(--danger-color);
+            background: rgba(255, 71, 87, 0.08);
+            border: 1px solid rgba(255, 71, 87, 0.15);
+        }
+
+        .warning i {
+            color: var(--danger-color);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="step-1">
+        <h2>Hoşgeldiniz Hanımefendi</h2>
+        <p>Lütfen sisteme kayıtlı adınızı girin.</p>
+
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="nameInput" placeholder="Adınız..." autocomplete="off">
+        </div>
+
+        <button type="button" class="main-btn" onclick="goToScan()">Sisteme Bağlan</button>
+        <p id="errorMsg"
+            style="color: var(--danger-color); margin-top: 20px; font-size: 14px; display: none; font-weight: 700;"></p>
+    </div>
+
+    <div class="container" id="step-2">
+        <h2 id="welcomeText">Giriş Başarılı</h2>
+        <h3>Biyometrik doğrulama gerekiyor.</h3>
+        <p>Tarama işlemini başlatmak için</p>
+        <p style="color: var(--main-color);">parmağınızı basılı tutun.</p>
+
+        <div class="fingerprint-wrapper">
+            <div class="fingerprint-btn" id="fingerBtn" onpointerdown="startScan()" oncontextmenu="return false;">
+                <i class="fas fa-fingerprint"></i>
+            </div>
+            <div class="scan-check" id="scanCheck"></div>
+        </div>
+
+        <p id="scanStatus"
+            style="font-size: 15px; color: var(--main-color); display: none; font-weight: 800; margin-top: 10px;">Analiz
+            ediliyor...</p>
+    </div>
+
+    <div class="container" id="step-3">
+        <div class="result-header">
+            <h2>Analiz Tamamlandı</h2>
+            <p style="color: var(--main-color);">Hedef: CANAN</p>
+        </div>
+
+        <div id="resultsArea"></div>
+    </div>
+
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        function goToScan() {
+            const nameInput = document.getElementById('nameInput').value.trim().toLowerCase();
+            const errorMsg = document.getElementById('errorMsg');
+
+            // Boş bırakılırsa uyarı ver
+            if (nameInput === "") {
+                errorMsg.innerText = "Lütfen isminizi girin.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            // Yanlış isim girilirse uyarı ver
+            if (nameInput !== "canan") {
+                errorMsg.innerText = "SİSTEM UYARISI: Yetkisiz giriş! Bu yazılım sadece Canan için kodlanmıştır.";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+            document.getElementById('step-1').style.display = 'none';
+            document.getElementById('step-2').style.display = 'block';
+            document.getElementById('welcomeText').innerText = `Hoş geldin, Canan`;
+        }
+
+        let holdTimeout;
+
+        function startScan() {
+            const btn = document.getElementById('fingerBtn');
+            const check = document.getElementById('scanCheck');
+            const status = document.getElementById('scanStatus');
+            const icon = btn.querySelector('i');
+
+            btn.style.boxShadow = "0 0 40px rgba(255, 117, 140, 0.6)";
+            btn.style.transform = "scale(0.95)";
+            icon.style.animation = "none";
+            check.style.display = "block";
+            status.style.display = "block";
+
+            holdTimeout = setTimeout(() => {
+                document.getElementById('step-2').style.display = 'none';
+                document.getElementById('step-3').style.display = 'block';
+                showResults();
+            }, 3500);
+
+            window.addEventListener('pointerup', cancelScan, { once: true });
+        }
+
+        function cancelScan() {
+            clearTimeout(holdTimeout);
+
+            const btn = document.getElementById('fingerBtn');
+            const check = document.getElementById('scanCheck');
+            const status = document.getElementById('scanStatus');
+            const icon = btn.querySelector('i');
+
+            if (btn) {
+                btn.style.boxShadow = "0 10px 25px rgba(255, 117, 140, 0.2)";
+                btn.style.transform = "scale(1)";
+                if (icon) icon.style.animation = "pulse 2s infinite";
+            }
+            if (check) check.style.display = "none";
+            if (status) status.style.display = "none";
+        }
+
+        function showResults() {
+            const results = [
+                { text: "Unvan: Hemşire Hanım", icon: "fas fa-stethoscope" },
+                { text: "Okumayı çok seviyor", icon: "fas fa-book-reader" },
+                { text: "Aşırı tatlılık tespit edildi.", icon: "fas fa-heart" },
+                { text: "DİKKAT: Bulaşıcı bir hastalığa sahip!", icon: "fas fa-virus", class: "warning" },
+                { text: "Mucit beyin kalp ritmini tehlikeli derecede artırıyor... 💓", icon: "fas fa-heartbeat", class: "warning" }
+            ];
+
+            const area = document.getElementById('resultsArea');
+            area.innerHTML = "";
+
+            results.forEach((item, index) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = `trait ${item.class || ''}`;
+                    div.innerHTML = `<i class="${item.icon}"></i> <span>${item.text}</span>`;
+                    area.appendChild(div);
+                }, index * 1200);
+            });
+        }
+    </script>
+</body>
+
+</html>
