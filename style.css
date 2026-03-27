@@ -1510,13 +1510,15 @@ body.locked {
 
 .piano-keys {
     display: flex;
-    gap: 4px;
+    gap: 2px;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    width: 100%;
+    padding: 0 4px;
 }
 
 .piano-key {
-    width: 44px;
+    width: clamp(25px, 9vw, 44px);
     height: 110px;
     border-radius: 0 0 8px 8px;
     background: linear-gradient(180deg, 
@@ -1652,8 +1654,10 @@ body.locked {
 
 .draw-toolbar {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     padding: 10px 16px;
     background: rgba(255,255,255,0.04);
     border-radius: 12px;
@@ -1662,7 +1666,9 @@ body.locked {
 
 .draw-colors {
     display: flex;
-    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
 }
 
 .draw-color-btn {
