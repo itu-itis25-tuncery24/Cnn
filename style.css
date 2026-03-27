@@ -1,0 +1,2090 @@
+/* ============================================
+   Canan'ın Evreni — Style System
+   A dreamy scroll-telling experience
+   ============================================ */
+
+/* ── Google Fonts are loaded in HTML ── */
+
+/* ============================================
+   CSS Custom Properties (Design Tokens)
+   ============================================ */
+:root {
+    /* Realm Gradients */
+    --r1-top: #0B0B2B;
+    --r1-mid: #15103D;
+    --r1-bot: #1E1545;
+    
+    --r2-top: #2E1858;
+    --r2-mid: #6B2E68;
+    --r2-bot: #D46A82;
+    
+    --r3-top: #D88BA0;
+    --r3-mid: #C8A0D8;
+    --r3-bot: #B8A8E8;
+    
+    --r4-top: #C8AAE0;
+    --r4-mid: #D0B8D8;
+    --r4-bot: #A8C8B8;
+    
+    --r5-top: #122840;
+    --r5-mid: #183050;
+    --r5-bot: #0E1830;
+    
+    --r6-top: #1A1240;
+    --r6-mid: #2A1B55;
+    --r6-bot: #4A3878;
+    
+    --r7-top: #8B4570;
+    --r7-mid: #D88898;
+    --r7-bot: #E8C080;
+
+    /* Text colors */
+    --text-primary: rgba(245, 238, 255, 0.95);
+    --text-secondary: rgba(235, 225, 250, 0.7);
+    --text-accent: rgba(255, 200, 220, 0.9);
+
+    /* Typography */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-script: 'Dancing Script', cursive;
+
+    /* Spacing */
+    --section-padding: 2rem;
+}
+
+/* ============================================
+   Reset & Base
+   ============================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--r1-top);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    cursor: default;
+}
+
+main {
+    position: relative;
+    z-index: 1;
+}
+
+body.locked {
+    overflow: hidden !important;
+}
+
+/* ============================================
+   Welcome Screen
+   ============================================ */
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--r1-top);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+.welcome-screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.welcome-screen h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 8vw, 3rem);
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.welcome-screen p {
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 80%;
+}
+
+#welcome-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+#welcome-name {
+    padding: 12px 24px;
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 250px;
+}
+
+#welcome-name:focus {
+    border-color: rgba(240,170,200,0.6);
+    background: rgba(255,255,255,0.1);
+}
+
+#welcome-name::placeholder {
+    color: rgba(255,255,255,0.3);
+}
+
+#welcome-form button {
+    padding: 12px 30px;
+    border-radius: 24px;
+    border: 1px solid rgba(240,170,200,0.3);
+    background: rgba(240,170,200,0.1);
+    color: rgba(240,170,200,0.9);
+    font-family: var(--font-display);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    width: 150px;
+}
+
+#welcome-form button:hover {
+    background: rgba(240,170,200,0.2);
+    transform: scale(1.05);
+}
+
+/* ============================================
+   Progress Bar
+   ============================================ */
+#progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, 
+        rgba(240,170,200,0.8), 
+        rgba(200,160,240,0.9), 
+        rgba(240,200,160,0.8)
+    );
+    z-index: 1000;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px rgba(220,170,230,0.5);
+}
+
+/* ============================================
+   Particle Canvas
+   ============================================ */
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* ============================================
+   Sound Toggle
+   ============================================ */
+.sound-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sound-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+    border-color: rgba(255,255,255,0.25);
+}
+
+/* ============================================
+   Scroll Indicator
+   ============================================ */
+#scroll-indicator {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 1;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+}
+
+#scroll-indicator.hidden {
+    opacity: 0;
+}
+
+#scroll-indicator span {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+}
+
+#scroll-indicator svg {
+    color: rgba(255,255,255,0.4);
+    animation: scrollBounce 2s ease-in-out infinite;
+}
+
+@keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+
+/* ============================================
+   Realm Sections (Base)
+   ============================================ */
+.realm {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.realm__layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+    pointer-events: none;
+}
+
+.realm__layer .scenery {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+}
+
+.realm__layer .scenery--mountains-far,
+.realm__layer .scenery--mountains-near {
+    height: 55%;
+}
+
+.realm__layer .scenery--ground {
+    height: 50%;
+}
+
+/* ============================================
+   Realm Content (Text)
+   ============================================ */
+.realm__content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: var(--section-padding);
+    max-width: 800px;
+}
+
+.realm__content--center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.realm__content--final {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.realm__subtitle {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 200;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+}
+
+.realm__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 5vw, 2.8rem);
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.realm__title--hero {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 200;
+    letter-spacing: 4px;
+    line-height: 1.15;
+}
+
+.realm__title--hero .title-line {
+    display: block;
+}
+
+.realm__title--hero .title-line--accent {
+    font-family: var(--font-script);
+    font-weight: 600;
+    font-size: 1.2em;
+    color: var(--text-accent);
+    letter-spacing: 2px;
+    text-shadow: 0 0 40px rgba(240,170,200,0.3);
+}
+
+.realm__title--name {
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 200;
+}
+
+.realm__title--name .name-glow {
+    font-family: var(--font-script);
+    font-weight: 700;
+    background: linear-gradient(135deg, 
+        rgba(255,200,220,1), 
+        rgba(240,170,210,1), 
+        rgba(255,220,200,1)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(240,170,200,0.4));
+    animation: nameGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes nameGlow {
+    0% { filter: drop-shadow(0 0 20px rgba(240,170,200,0.3)); }
+    100% { filter: drop-shadow(0 0 40px rgba(240,170,200,0.6)); }
+}
+
+.realm__tagline {
+    font-family: var(--font-display);
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
+    font-weight: 200;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 8px;
+}
+
+.realm__text {
+    font-family: var(--font-display);
+    font-size: clamp(0.9rem, 2vw, 1.15rem);
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    letter-spacing: 1px;
+}
+
+.realm__text--final {
+    color: var(--text-primary);
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+}
+
+.realm__text--small {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: var(--text-secondary);
+}
+
+.final-message {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.final-heart {
+    margin-top: 16px;
+}
+
+.final-heart svg {
+    animation: heartBeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.15); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.1); }
+    60% { transform: scale(1); }
+}
+
+.realm__footer {
+    font-family: var(--font-script);
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: var(--text-accent);
+    letter-spacing: 2px;
+    margin-top: 24px;
+    opacity: 0.8;
+}
+
+/* ============================================
+   Text Reveal Animation
+   ============================================ */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================
+   REALM 1: Yıldızlı Gece (Starry Night)
+   ============================================ */
+.realm--night {
+    background: linear-gradient(180deg, 
+        var(--r1-top) 0%, 
+        var(--r1-mid) 40%, 
+        var(--r1-bot) 100%
+    );
+}
+
+/* Star layers using CSS */
+.stars-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.stars-layer--1 {
+    background-image: 
+        radial-gradient(2px 2px at 10% 15%, rgba(255,255,255,0.8) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 25% 35%, rgba(255,255,255,0.6) 50%, transparent 100%),
+        radial-gradient(2px 2px at 40% 8%, rgba(255,255,255,0.7) 50%, transparent 100%),
+        radial-gradient(1px 1px at 55% 25%, rgba(255,255,255,0.5) 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 70% 12%, rgba(240,200,255,0.8) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 85% 30%, rgba(255,255,255,0.6) 50%, transparent 100%),
+        radial-gradient(1px 1px at 15% 55%, rgba(255,255,255,0.4) 50%, transparent 100%),
+        radial-gradient(2px 2px at 35% 48%, rgba(255,230,240,0.7) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 60% 42%, rgba(255,255,255,0.5) 50%, transparent 100%),
+        radial-gradient(1px 1px at 78% 52%, rgba(255,255,255,0.4) 50%, transparent 100%),
+        radial-gradient(2px 2px at 92% 18%, rgba(255,255,255,0.6) 50%, transparent 100%),
+        radial-gradient(1px 1px at 5% 40%, rgba(255,255,255,0.3) 50%, transparent 100%);
+    animation: twinkle1 4s ease-in-out infinite alternate;
+}
+
+.stars-layer--2 {
+    background-image: 
+        radial-gradient(1.5px 1.5px at 8% 22%, rgba(255,255,255,0.5) 50%, transparent 100%),
+        radial-gradient(2px 2px at 20% 45%, rgba(240,200,255,0.6) 50%, transparent 100%),
+        radial-gradient(1px 1px at 33% 18%, rgba(255,255,255,0.4) 50%, transparent 100%),
+        radial-gradient(2px 2px at 48% 38%, rgba(255,255,255,0.7) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 62% 28%, rgba(255,220,240,0.6) 50%, transparent 100%),
+        radial-gradient(1px 1px at 75% 45%, rgba(255,255,255,0.4) 50%, transparent 100%),
+        radial-gradient(2px 2px at 88% 22%, rgba(255,255,255,0.5) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 95% 40%, rgba(240,200,255,0.5) 50%, transparent 100%),
+        radial-gradient(1px 1px at 42% 55%, rgba(255,255,255,0.3) 50%, transparent 100%),
+        radial-gradient(2px 2px at 52% 15%, rgba(255,230,250,0.6) 50%, transparent 100%);
+    animation: twinkle2 5s ease-in-out infinite alternate;
+}
+
+.stars-layer--3 {
+    background-image: 
+        radial-gradient(1px 1px at 12% 32%, rgba(255,255,255,0.3) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 28% 12%, rgba(255,255,255,0.4) 50%, transparent 100%),
+        radial-gradient(1px 1px at 45% 28%, rgba(255,255,255,0.3) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 58% 48%, rgba(240,200,255,0.4) 50%, transparent 100%),
+        radial-gradient(1px 1px at 72% 35%, rgba(255,255,255,0.3) 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 82% 15%, rgba(255,255,255,0.4) 50%, transparent 100%),
+        radial-gradient(1px 1px at 90% 48%, rgba(255,255,255,0.3) 50%, transparent 100%),
+        radial-gradient(1px 1px at 3% 50%, rgba(255,255,255,0.3) 50%, transparent 100%);
+    animation: twinkle3 6s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle1 {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+@keyframes twinkle2 {
+    0% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+@keyframes twinkle3 {
+    0% { opacity: 0.4; }
+    100% { opacity: 0.9; }
+}
+
+/* Shooting star */
+.shooting-star {
+    position: absolute;
+    top: 15%;
+    left: 70%;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 
+        0 0 6px 2px rgba(255,255,255,0.6),
+        0 0 12px 4px rgba(200,180,255,0.3);
+    opacity: 0;
+    animation: shootingStar 8s ease-in-out infinite;
+}
+
+.shooting-star--2 {
+    top: 25%;
+    left: 30%;
+    animation-delay: 5s;
+    animation-duration: 10s;
+}
+
+@keyframes shootingStar {
+    0% { opacity: 0; transform: translate(0, 0) rotate(-35deg); }
+    2% { opacity: 1; }
+    5% { opacity: 1; transform: translate(-200px, 120px) rotate(-35deg); }
+    6% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+.shooting-star::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    width: 60px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6));
+    transform: translateY(-50%);
+}
+
+/* Character positioning in Realm 1 */
+.realm--night .character-layer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 18%;
+}
+
+.realm--night .character--standing {
+    animation: characterFloat 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(100,80,150,0.3));
+}
+
+@keyframes characterFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* ============================================
+   REALM 2: Şafak Tepeleri (Dawn Hills)
+   ============================================ */
+.realm--dawn {
+    background: linear-gradient(180deg, 
+        var(--r2-top) 0%, 
+        var(--r2-mid) 45%, 
+        var(--r2-bot) 100%
+    );
+}
+
+/* Sun */
+.sun-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sun {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(255,220,180,0.9) 0%, 
+        rgba(255,180,140,0.6) 40%, 
+        rgba(255,150,120,0.2) 70%, 
+        transparent 100%
+    );
+}
+
+.sun-glow {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(255,200,160,0.15) 0%, 
+        rgba(255,160,120,0.05) 50%, 
+        transparent 100%
+    );
+    animation: sunPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes sunPulse {
+    0% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+    100% { transform: translateX(-50%) scale(1.15); opacity: 1; }
+}
+
+/* Hills scenery */
+.realm--dawn .scenery--hills-far { height: 65%; }
+.realm--dawn .scenery--hills-mid { height: 60%; }
+.realm--dawn .scenery--hills-near { height: 55%; }
+
+/* Character running */
+.realm--dawn .character-layer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 22%;
+    padding-left: 10%;
+}
+
+.realm--dawn .character--running {
+    animation: characterRun 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes characterRun {
+    0% { transform: translateY(0) rotate(-2deg); }
+    100% { transform: translateY(-3px) rotate(2deg); }
+}
+
+/* Birds */
+.realm--dawn .birds {
+    position: absolute;
+    top: 22%;
+    right: 15%;
+    animation: birdsFloat 6s ease-in-out infinite;
+}
+
+@keyframes birdsFloat {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(10px, -5px); }
+    50% { transform: translate(20px, 2px); }
+    75% { transform: translate(10px, -3px); }
+}
+
+/* ============================================
+   REALM 3: Bulut Krallığı (Cloud Kingdom)
+   ============================================ */
+.realm--clouds {
+    background: linear-gradient(180deg, 
+        var(--r3-top) 0%, 
+        var(--r3-mid) 50%, 
+        var(--r3-bot) 100%
+    );
+}
+
+/* Clouds */
+.cloud {
+    position: absolute;
+    animation: cloudFloat 8s ease-in-out infinite;
+}
+
+.cloud--1 {
+    top: 15%;
+    left: 5%;
+    animation-duration: 10s;
+}
+
+.cloud--2 {
+    top: 35%;
+    right: 10%;
+    animation-delay: 2s;
+    animation-duration: 8s;
+}
+
+.cloud--3 {
+    top: 55%;
+    left: 15%;
+    animation-delay: 4s;
+    animation-duration: 12s;
+}
+
+@keyframes cloudFloat {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(15px) translateY(-5px); }
+    50% { transform: translateX(25px) translateY(3px); }
+    75% { transform: translateX(10px) translateY(-8px); }
+}
+
+/* Floating islands */
+.floating-island {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating-island svg {
+    position: absolute;
+    top: 30%;
+    right: 15%;
+    animation: islandFloat 6s ease-in-out infinite;
+}
+
+.floating-island--2 svg {
+    top: 55%;
+    left: 10%;
+    right: auto;
+    animation-delay: 3s;
+    animation-duration: 7s;
+}
+
+@keyframes islandFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+/* Character on clouds */
+.realm--clouds .character-layer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 5%;
+}
+
+.realm--clouds .character--wonder {
+    animation: characterWonder 3s ease-in-out infinite;
+}
+
+@keyframes characterWonder {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+/* ============================================
+   REALM 4: Çiçek Vadisi (Flower Valley)
+   ============================================ */
+.realm--flowers {
+    background: linear-gradient(180deg, 
+        var(--r4-top) 0%, 
+        var(--r4-mid) 50%, 
+        var(--r4-bot) 100%
+    );
+}
+
+.realm--flowers .scenery--meadow-far { height: 55%; }
+.realm--flowers .scenery--meadow-mid { height: 50%; }
+.realm--flowers .scenery--flower-field { height: 48%; }
+
+/* Flower sway animation */
+.flowers-group line {
+    animation: flowerSway 3s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+
+.flowers-group line:nth-child(3n) { animation-delay: 0.5s; }
+.flowers-group line:nth-child(3n+1) { animation-delay: 1s; }
+.flowers-group line:nth-child(3n+2) { animation-delay: 1.5s; }
+
+@keyframes flowerSway {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(2deg); }
+    75% { transform: rotate(-2deg); }
+}
+
+/* Butterflies */
+.realm--flowers .butterflies {
+    position: absolute;
+    top: 25%;
+    left: 20%;
+}
+
+.butterfly {
+    animation: butterflyFly 4s ease-in-out infinite;
+}
+
+.butterfly--2 {
+    animation-delay: 1.5s;
+    animation-duration: 5s;
+}
+
+.butterfly--3 {
+    animation-delay: 3s;
+    animation-duration: 4.5s;
+}
+
+@keyframes butterflyFly {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(15px, -10px) rotate(5deg); }
+    50% { transform: translate(30px, 5px) rotate(-3deg); }
+    75% { transform: translate(15px, -8px) rotate(4deg); }
+}
+
+/* Character walking */
+.realm--flowers .character-layer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 22%;
+    padding-right: 5%;
+}
+
+.realm--flowers .character--walking {
+    animation: characterWalk 2s ease-in-out infinite;
+}
+
+@keyframes characterWalk {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* ============================================
+   REALM 5: Yıldız Okyanusu (Star Ocean)
+   ============================================ */
+.realm--ocean {
+    background: linear-gradient(180deg, 
+        var(--r5-top) 0%, 
+        var(--r5-mid) 40%, 
+        var(--r5-bot) 100%
+    );
+}
+
+/* Ocean moon */
+.ocean-moon {
+    position: absolute;
+    top: 12%;
+    right: 20%;
+}
+
+.ocean-moon__body {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, 
+        rgba(230,220,245,0.95) 0%, 
+        rgba(200,190,225,0.8) 50%, 
+        rgba(180,170,210,0.6) 100%
+    );
+}
+
+.ocean-moon__glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(200,190,230,0.15) 0%, 
+        rgba(180,170,220,0.05) 50%, 
+        transparent 100%
+    );
+    animation: moonGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes moonGlow {
+    0% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Waves */
+.realm--ocean .scenery--waves { height: 55%; }
+
+.wave {
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+.wave--1 { animation: waveMove1 6s ease-in-out infinite; }
+.wave--2 { animation: waveMove2 5s ease-in-out infinite; }
+.wave--3 { animation: waveMove3 7s ease-in-out infinite; }
+
+@keyframes waveMove1 {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-15px); }
+}
+
+@keyframes waveMove2 {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(12px); }
+}
+
+@keyframes waveMove3 {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }
+}
+
+/* Character + boat */
+.realm--ocean .character-layer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 15%;
+}
+
+.realm--ocean .character--boat {
+    animation: boatRock 4s ease-in-out infinite;
+}
+
+@keyframes boatRock {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-3px) rotate(1.5deg); }
+    50% { transform: translateY(2px) rotate(-1deg); }
+    75% { transform: translateY(-2px) rotate(1deg); }
+}
+
+/* ============================================
+   REALM 6: Ay Bahçesi (Moon Garden)
+   ============================================ */
+.realm--garden {
+    background: linear-gradient(180deg, 
+        var(--r6-top) 0%, 
+        var(--r6-mid) 45%, 
+        var(--r6-bot) 100%
+    );
+}
+
+/* Garden moon */
+.garden-moon {
+    position: absolute;
+    top: 8%;
+    right: 18%;
+}
+
+.garden-moon__body {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, 
+        rgba(240,235,255,0.95) 0%, 
+        rgba(220,210,245,0.85) 40%, 
+        rgba(200,190,230,0.6) 100%
+    );
+    position: relative;
+    overflow: hidden;
+}
+
+.garden-moon__body .moon-surface {
+    width: 100%;
+    height: 100%;
+}
+
+.garden-moon__glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(220,210,245,0.12) 0%, 
+        rgba(200,190,235,0.05) 40%, 
+        transparent 100%
+    );
+    animation: gardenMoonGlow 5s ease-in-out infinite alternate;
+}
+
+@keyframes gardenMoonGlow {
+    0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* Trees */
+.realm--garden .scenery--trees {
+    height: 70%;
+}
+
+/* Lanterns */
+.lanterns {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.lantern {
+    position: absolute;
+    animation: lanternFloat 5s ease-in-out infinite;
+}
+
+.lantern--1 {
+    top: 25%;
+    left: 25%;
+    animation-duration: 6s;
+}
+
+.lantern--2 {
+    top: 18%;
+    left: 55%;
+    animation-delay: 1.5s;
+    animation-duration: 7s;
+}
+
+.lantern--3 {
+    top: 35%;
+    right: 20%;
+    animation-delay: 3s;
+    animation-duration: 5.5s;
+}
+
+.lantern--4 {
+    top: 28%;
+    left: 40%;
+    animation-delay: 2s;
+    animation-duration: 8s;
+}
+
+@keyframes lanternFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(2deg); }
+    50% { transform: translateY(-5px) rotate(-1deg); }
+    75% { transform: translateY(-12px) rotate(1.5deg); }
+}
+
+/* Garden ground */
+.realm--garden .scenery--garden-ground { height: 45%; }
+
+/* Character with lantern */
+.realm--garden .character-layer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 18%;
+}
+
+.realm--garden .character--lantern {
+    animation: characterGlow 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(255,200,130,0.15));
+}
+
+@keyframes characterGlow {
+    0%, 100% { 
+        transform: translateY(0); 
+        filter: drop-shadow(0 0 15px rgba(255,200,130,0.15));
+    }
+    50% { 
+        transform: translateY(-3px); 
+        filter: drop-shadow(0 0 25px rgba(255,200,130,0.25));
+    }
+}
+
+/* ============================================
+   REALM 7: Sonsuza Dek (Forever)
+   ============================================ */
+.realm--forever {
+    background: linear-gradient(180deg, 
+        var(--r7-top) 0%, 
+        var(--r7-mid) 50%, 
+        var(--r7-bot) 100%
+    );
+    min-height: 100vh;
+    padding-bottom: 80px;
+}
+
+.forever-glow {
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, 
+        rgba(255,200,170,0.15) 0%, 
+        rgba(255,180,150,0.05) 50%, 
+        transparent 100%
+    );
+    animation: foreverPulse 5s ease-in-out infinite alternate;
+}
+
+@keyframes foreverPulse {
+    0% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+    100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+
+.realm--forever .scenery--forever-hills { height: 50%; }
+.realm--forever .scenery--forever-ground { height: 45%; }
+
+/* Two characters together */
+.realm--forever .character-layer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 25%;
+}
+
+.realm--forever .character--together {
+    animation: togetherFloat 4s ease-in-out infinite;
+}
+
+.heart-float {
+    animation: heartFloat 2s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes togetherFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes heartFloat {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+    50% { transform: translateY(-6px) scale(1.1); opacity: 1; }
+}
+
+/* ============================================
+   Scarf Animation
+   ============================================ */
+.scarf {
+    animation: scarfWave 2.5s ease-in-out infinite;
+    transform-origin: left center;
+}
+
+@keyframes scarfWave {
+    0%, 100% { transform: scaleX(1) rotate(0deg); }
+    50% { transform: scaleX(1.1) rotate(3deg); }
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+/* ============================================
+   Games Section
+   ============================================ */
+.games-section {
+    position: relative;
+    padding: 80px 24px 100px;
+    background: linear-gradient(180deg, 
+        var(--r7-bot) 0%, 
+        #3a2848 30%,
+        #1a1230 100%
+    );
+    text-align: center;
+}
+
+.games-header {
+    margin-bottom: 48px;
+}
+
+.games-subtitle {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 200;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 12px;
+}
+
+.games-title {
+    font-family: var(--font-script);
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 600;
+    background: linear-gradient(135deg, 
+        rgba(240,170,200,0.9), 
+        rgba(200,160,240,0.9)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.games-desc {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 1px;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.game-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px 20px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.game-card:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(240,170,200,0.2);
+    transform: translateY(-6px);
+    box-shadow: 
+        0 12px 40px rgba(200,140,220,0.1),
+        0 0 0 1px rgba(240,170,200,0.1);
+}
+
+.game-card:active {
+    transform: translateY(-2px);
+}
+
+.game-card__icon {
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    opacity: 0.85;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.game-card:hover .game-card__icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.game-card__title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.game-card__desc {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   Game Overlay
+   ============================================ */
+.game-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 8, 25, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.game-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.game-overlay__header {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+}
+
+.game-overlay__title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+}
+
+.game-overlay__controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.game-overlay__score {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--text-accent);
+    letter-spacing: 1px;
+}
+
+.game-overlay__close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.game-overlay__close:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border-color: rgba(255,255,255,0.3);
+}
+
+#game-canvas {
+    border-radius: 16px;
+    max-width: 90vw;
+    max-height: 70vh;
+    touch-action: none;
+}
+
+/* ============================================
+   Memory Board
+   ============================================ */
+.memory-board {
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 340px;
+    padding: 10px;
+}
+
+.memory-board.active {
+    display: grid;
+}
+
+.memory-card {
+    aspect-ratio: 3/4;
+    border-radius: 10px;
+    cursor: pointer;
+    perspective: 600px;
+    min-width: 60px;
+}
+
+.memory-card__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.memory-card.flipped .memory-card__inner {
+    transform: rotateY(180deg);
+}
+
+.memory-card.matched .memory-card__inner {
+    transform: rotateY(180deg);
+}
+
+.memory-card.matched {
+    pointer-events: none;
+}
+
+.memory-card__front,
+.memory-card__back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memory-card__front {
+    background: linear-gradient(135deg, 
+        rgba(200,160,230,0.25), 
+        rgba(240,170,200,0.15)
+    );
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.3);
+}
+
+.memory-card__front::after {
+    content: '?';
+}
+
+.memory-card__back {
+    background: linear-gradient(135deg, 
+        rgba(240,170,200,0.2), 
+        rgba(200,160,230,0.2)
+    );
+    border: 1px solid rgba(240,170,200,0.2);
+    transform: rotateY(180deg);
+    font-size: 1.6rem;
+}
+
+.memory-card.matched .memory-card__back {
+    border-color: rgba(160,230,180,0.3);
+    background: linear-gradient(135deg, 
+        rgba(160,230,180,0.15), 
+        rgba(180,220,200,0.1)
+    );
+}
+
+/* ============================================
+   Piano Container
+   ============================================ */
+.piano-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 16px;
+}
+
+.piano-container.active { display: flex; }
+
+.piano-visual {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.03);
+}
+
+#piano-visualizer {
+    width: 100%;
+    height: 80px;
+    display: block;
+}
+
+.piano-keys {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.piano-key {
+    width: 44px;
+    height: 110px;
+    border-radius: 0 0 8px 8px;
+    background: linear-gradient(180deg, 
+        rgba(255,255,255,0.12) 0%, 
+        rgba(255,255,255,0.06) 100%
+    );
+    border: 1px solid rgba(255,255,255,0.1);
+    border-top: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.3);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.piano-key:active,
+.piano-key.active {
+    background: linear-gradient(180deg, 
+        rgba(240,170,200,0.25) 0%, 
+        rgba(200,160,230,0.15) 100%
+    );
+    border-color: rgba(240,170,200,0.3);
+    box-shadow: 
+        0 0 20px rgba(240,170,200,0.15),
+        inset 0 -4px 12px rgba(240,170,200,0.1);
+    color: rgba(240,170,200,0.7);
+}
+
+/* ============================================
+   Wish Container
+   ============================================ */
+.wish-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 16px;
+}
+
+.wish-container.active { display: flex; }
+
+#wish-canvas {
+    width: 100%;
+    max-width: 400px;
+    height: 400px;
+    border-radius: 16px;
+    touch-action: none;
+}
+
+.wish-input-area {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 360px;
+}
+
+.wish-input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.wish-input::placeholder {
+    color: rgba(255,255,255,0.25);
+}
+
+.wish-input:focus {
+    border-color: rgba(255,200,130,0.3);
+}
+
+.wish-release-btn {
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,200,130,0.2);
+    background: rgba(255,200,130,0.08);
+    color: rgba(255,220,160,0.8);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.wish-release-btn:hover {
+    background: rgba(255,200,130,0.15);
+    border-color: rgba(255,200,130,0.35);
+}
+
+/* ============================================
+   Draw Container
+   ============================================ */
+.draw-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 16px;
+}
+
+.draw-container.active { display: flex; }
+
+#draw-canvas {
+    width: 100%;
+    max-width: 400px;
+    height: 400px;
+    border-radius: 16px;
+    background: rgba(15,10,30,0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.draw-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.draw-colors {
+    display: flex;
+    gap: 6px;
+}
+
+.draw-color-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.draw-color-btn:hover {
+    transform: scale(1.2);
+}
+
+.draw-color-btn.active {
+    border-color: rgba(255,255,255,0.5);
+    box-shadow: 0 0 8px currentColor;
+}
+
+.draw-sizes {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.draw-size-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    transition: all 0.2s ease;
+}
+
+.draw-size-btn.active {
+    border-color: rgba(240,170,200,0.3);
+    color: rgba(240,170,200,0.7);
+    background: rgba(240,170,200,0.08);
+}
+
+.draw-clear-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.4);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.draw-clear-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
+}
+
+/* ============================================
+   Endless Slide Container
+   ============================================ */
+.slide-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 480px;
+    padding: 0 16px;
+    position: relative;
+}
+
+.slide-container.active { display: flex; }
+
+#slide-canvas {
+    border-radius: 16px;
+    cursor: pointer;
+    touch-action: none;
+    background: linear-gradient(180deg, rgba(20,20,40,0.8) 0%, rgba(40,30,60,0.8) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.slide-hint {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+}
+
+.slide-gameover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20,15,40,0.85);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 30px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.slide-gameover.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.slide-gameover p {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.9);
+    margin: 0;
+}
+
+.gameover-score {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+}
+
+.slide-gameover button {
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: 1px solid rgba(240,170,200,0.3);
+    background: rgba(240,170,200,0.1);
+    color: rgba(240,170,200,0.9);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.slide-gameover button:hover {
+    background: rgba(240,170,200,0.2);
+    transform: scale(1.05);
+}
+
+/* ============================================
+   Scratch Card Container
+   ============================================ */
+.scratch-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 16px;
+}
+
+.scratch-container.active { display: flex; }
+
+#scratch-canvas {
+    border-radius: 16px;
+    cursor: grab;
+    touch-action: none;
+}
+
+#scratch-canvas:active { cursor: grabbing; }
+
+.scratch-next-btn {
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: 1px solid rgba(240,170,200,0.2);
+    background: rgba(240,170,200,0.06);
+    color: rgba(240,170,200,0.7);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.scratch-next-btn:hover {
+    background: rgba(240,170,200,0.12);
+    border-color: rgba(240,170,200,0.35);
+}
+
+/* ============================================
+   Fireworks Container
+   ============================================ */
+.fireworks-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 420px;
+    padding: 0 16px;
+}
+
+.fireworks-container.active { display: flex; }
+
+#fireworks-canvas {
+    border-radius: 16px;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.fireworks-hint {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 2px;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 768px) {
+    .realm__title--hero {
+        font-size: clamp(2rem, 10vw, 3.5rem);
+    }
+
+    .realm__title--name {
+        font-size: clamp(2.5rem, 12vw, 4.5rem);
+    }
+
+    .realm__content {
+        padding: 1.5rem;
+    }
+
+    .sun {
+        width: 60px;
+        height: 60px;
+    }
+
+    .sun-glow {
+        width: 180px;
+        height: 180px;
+    }
+
+    .garden-moon__body {
+        width: 70px;
+        height: 70px;
+    }
+
+    .garden-moon__glow {
+        width: 200px;
+        height: 200px;
+    }
+
+    .cloud svg {
+        width: 140px;
+        height: auto;
+    }
+
+    .floating-island svg {
+        width: 120px;
+        height: auto;
+    }
+
+    .floating-island--2 svg {
+        width: 80px;
+    }
+
+    .lantern--3,
+    .lantern--4 {
+        display: none;
+    }
+
+    .character--standing,
+    .character--running,
+    .character--wonder,
+    .character--walking,
+    .character--lantern {
+        width: 25px;
+        height: auto;
+    }
+
+    .character--boat {
+        width: 60px;
+        height: auto;
+    }
+
+    .character--together {
+        width: 50px;
+        height: auto;
+    }
+
+    .birds {
+        width: 80px;
+        height: auto;
+    }
+
+    .butterflies {
+        width: 130px;
+        height: auto;
+    }
+
+    #scroll-indicator {
+        bottom: 30px;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+        gap: 16px;
+    }
+
+    .games-section {
+        padding: 60px 20px 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .realm__subtitle {
+        font-size: 0.7rem;
+        letter-spacing: 4px;
+    }
+
+    .realm__tagline {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+    }
+
+    .realm__text {
+        font-size: 0.85rem;
+    }
+
+    .shooting-star--2 {
+        display: none;
+    }
+
+    .cloud--1 {
+        display: none;
+    }
+
+    .floating-island--2 {
+        display: none;
+    }
+
+    .game-card__title {
+        font-size: 1.1rem;
+    }
+    
+    .game-card__desc {
+        font-size: 0.8rem;
+    }
+    
+    .game-overlay__content {
+        width: 95%;
+        padding: 50px 10px 30px;
+    }
+
+    .memory-card {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .draw-size-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+
+    .scratch-next-btn {
+        padding: 10px 24px;
+        font-size: 0.8rem;
+    }
+}
+
+/* ============================================
+   Smooth page transitions (initial load)
+   ============================================ */
+body {
+    animation: pageLoad 1.5s ease-out;
+}
+
+@keyframes pageLoad {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* ============================================
+   Selection styling
+   ============================================ */
+::selection {
+    background: rgba(240,170,200,0.3);
+    color: white;
+}
+
+::-moz-selection {
+    background: rgba(240,170,200,0.3);
+    color: white;
+}
+
+/* ============================================
+   Scrollbar styling
+   ============================================ */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(15,10,30,0.8);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(200,160,230,0.3);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(200,160,230,0.5);
+}
