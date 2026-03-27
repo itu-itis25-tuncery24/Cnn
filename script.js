@@ -1479,14 +1479,22 @@ function startSlide(scoreEl) {
         return 0; // Flat
     }
 
+    const overlay = document.getElementById('game-overlay');
+
     if (slideController) {
-        canvas.removeEventListener('touchstart', slideController.ds);
-        canvas.removeEventListener('mousedown', slideController.ms);
+        overlay.removeEventListener('touchstart', slideController.ds);
+        overlay.removeEventListener('mousedown', slideController.ms);
         document.removeEventListener('keydown', slideController.kd);
     }
 
     function jump(e) {
-        if (e && e.type !== 'keydown') e.preventDefault();
+        if (activeGame !== 'slide') return;
+        if (e && e.type !== 'keydown') {
+            if (e.target && (e.target.tagName.toLowerCase() === 'button' || e.target.closest('.game-overlay__close'))) {
+                return;
+            }
+            e.preventDefault();
+        }
         if (slider.grounded && !isGameOver) {
             slider.vy = -9.5; // Snappy jump
             slider.grounded = false;
@@ -1512,8 +1520,8 @@ function startSlide(scoreEl) {
         kd: (e) => { if (e.code === 'Space') jump(e); }
     };
 
-    canvas.addEventListener('touchstart', slideController.ds, { passive: false });
-    canvas.addEventListener('mousedown', slideController.ms);
+    overlay.addEventListener('touchstart', slideController.ds, { passive: false });
+    overlay.addEventListener('mousedown', slideController.ms);
     document.addEventListener('keydown', slideController.kd);
 
     function spawnEntities() {
