@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geri Sayım </title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;600&family=Outfit:wght@200;300;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --r3-top: #D88BA0;
+            --r3-mid: #C8A0D8;
+            --r3-bot: #B8A8E8;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-accent: #FFC8DC;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-script: 'Dancing Script', cursive;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, var(--r3-top), var(--r3-mid), var(--r3-bot));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background elements */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.5;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 200, 220, 0.4);
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: rgba(200, 160, 240, 0.3);
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(50px, 100px) scale(1.1);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            width: 90%;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 200;
+            letter-spacing: 4px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight {
+            font-family: var(--font-script);
+            color: var(--text-accent);
+            font-size: 1.2em;
+            display: block;
+            margin-top: -0.5rem;
+        }
+
+        .countdown {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .time-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .number {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            background: linear-gradient(to bottom, #fff, #eee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .label {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .divider {
+            height: 1px;
+            width: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 2rem auto;
+        }
+
+        .target-date {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <h1>Büyük Güne Kalan Süre <span class="highlight">3 Kasım Bekleniyor</span></h1>
+
+        <div class="countdown">
+            <div class="time-box">
+                <span id="days" class="number">00</span>
+                <span class="label">Gün</span>
+            </div>
+            <div class="time-box">
+                <span id="hours" class="number">00</span>
+                <span class="label">Saat</span>
+            </div>
+            <div class="time-box">
+                <span id="minutes" class="number">00</span>
+                <span class="label">Dakika</span>
+            </div>
+            <div class="time-box">
+                <span id="seconds" class="number">00</span>
+                <span class="label">Saniye</span>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <p class="target-date">Hedef: 3 Kasım 2026, 00:00</p>
+    </div>
+
+    <script>
+        // Hedef tarih: 3 Kasım 2026, 00:00:00
+        const targetDate = new Date('November 3, 2026 00:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                document.querySelector('.countdown').innerHTML = "<h2 style='font-family: var(--font-script); font-size: 3rem;'>Giriş Yapıldı! ✨</h2>";
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+        }
+
+        // İlk güncelleme
+        updateCountdown();
+        // Her saniye güncelle
+        setInterval(updateCountdown, 1000);
+
+        // Arka plan parçacıkları oluştur
+        function createParticles() {
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = Math.random() * 3 + 1 + 'px';
+                particle.style.width = size;
+                particle.style.height = size;
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.animation = `float ${Math.random() * 10 + 10}s infinite linear`;
+                document.body.appendChild(particle);
+            }
+        }
+        createParticles();
+    </script>
+</body>
+
+</html>
