@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Heart Surface</title>
+<title>Heart Surface - Updated</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -38,6 +38,7 @@
     margin-bottom: 10px;
     font-family: 'Georgia', serif;
     transition: border-color 0.3s, color 0.3s;
+    z-index: 10;
   }
   #btn:hover {
     border-color: rgba(255, 100, 160, 0.9);
@@ -51,7 +52,7 @@
 <div id="equations">
   x = [4 sin u &minus; sin(3u)] sin v<br>
   y = 2 cos v<br>
-  z = 1.2 (4 cos u &minus; cos(2u) &minus; cos(3u)/2) sin v
+  z = (4 cos u &minus; cos(2u) &minus; cos(3u)/2) sin v
 </div>
 
 <button id="btn">OLUŞTUR</button>
@@ -73,8 +74,9 @@ renderer.setClearColor(0x000000, 1);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const scene  = new THREE.Scene();
+// Kamera pozisyonu: y=-1 kalbi yukarı kaydırır, z=15 nesneyi küçültür
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / getH(), 0.1, 100);
-camera.position.set(0, 0, 13);
+camera.position.set(0, -1, 15); 
 camera.lookAt(0, 0, 0);
 
 function resize() {
@@ -86,11 +88,11 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
-// ---- Kalp parametrik ----
+// ---- Kalp parametrik (Sivrilik azaltıldı) ----
 function heartPt(u, v) {
   const ox = (4 * Math.sin(u) - Math.sin(3 * u)) * Math.sin(v);
-  const oy = 2 * Math.cos(v);
-  const oz = 1.2 * (4 * Math.cos(u) - Math.cos(2 * u) - Math.cos(3 * u) / 2) * Math.sin(v);
+  const oy = 2.2 * Math.cos(v); // Yüksekliği hafif artırarak formu yumuşattık
+  const oz = 1.0 * (4 * Math.cos(u) - Math.cos(2 * u) - Math.cos(3 * u) / 2) * Math.sin(v);
   return new THREE.Vector3(ox, oz, oy);
 }
 
@@ -98,43 +100,31 @@ const U = 72, V = 36;
 const group = new THREE.Group();
 scene.add(group);
 
-// ---- Tüm çizgileri önceden hesapla ----
-// Her segment için phase: 0..1 — animasyon dalgasındaki konumu
 const allSegments = [];
 
-// U çizgileri (meridyen) — kalbin etrafını saran dikey çizgiler
 for (let i = 0; i <= U; i++) {
   const u = (i / U) * Math.PI * 2;
   const pts = [];
   for (let j = 0; j <= V; j++) pts.push(heartPt(u, (j / V) * Math.PI));
-  // Dalga merkezden (u=π/2 ≈ sol veya sağ tepe) dışa doğru yayılsın
   const angle = (i / U) * Math.PI * 2;
-  // 0..1: en ortada olan çizgiler önce gelsin
   const phase = Math.abs(Math.sin(angle / 2));
   allSegments.push({ pts, phase });
 }
 
-// V çizgileri (enlem) — yukarıdan aşağıya v değişir
 for (let j = 0; j <= V; j++) {
   const v = (j / V) * Math.PI;
   const pts = [];
   for (let i = 0; i <= U; i++) pts.push(heartPt((i / U) * Math.PI * 2, v));
-  // v=0 tepe (kanatlar arası), v=π sivri uç
-  // Ortadan (v≈π/2 en geniş yer) başlayıp uçlara doğru yayılsın
-  const phase = Math.abs(Math.cos(v)); // 0 orta, 1 uçlar
+  const phase = Math.abs(Math.cos(v)); 
   allSegments.push({ pts, phase });
 }
 
-// ---- Animasyon parametreleri ----
-const ANIM_DURATION = 2400; // ms
-const RAMP          = 0.30; // fade-in süresi (normalize 0..1)
+// ---- Animasyon Süresi (Yavaşlatıldı) ----
+const ANIM_DURATION = 4500; // 4.5 saniye
+const RAMP          = 0.40; 
 
 let lines      = [];
 let animStart  = null;
-
-function easeOutQuart(t) {
-  return 1 - Math.pow(1 - t, 4);
-}
 
 function easeInOutSine(t) {
   return -(Math.cos(Math.PI * t) - 1) / 2;
@@ -156,70 +146,65 @@ function buildAllLines() {
 function startAnimation() {
   buildAllLines();
   animStart = performance.now();
-  btn.textContent = '...';
+  btn.textContent = 'ÇİZİLİYOR...';
   btn.style.pointerEvents = 'none';
+  btn.style.opacity = '0.5';
 }
 
 btn.addEventListener('click', startAnimation);
 
-// ---- Dokunma / Fare ----
 let rotX = 0, rotY = 0;
 let dragging = false, px = 0, py = 0;
 let scale = 1, prevDist = 0;
 
 canvas.addEventListener('touchstart', e => {
-  e.preventDefault();
   if (e.touches.length === 1) {
     dragging = true; px = e.touches[0].clientX; py = e.touches[0].clientY;
   } else if (e.touches.length === 2) {
     prevDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
   }
-}, { passive: false });
+}, { passive: true });
 
 canvas.addEventListener('touchmove', e => {
-  e.preventDefault();
   if (e.touches.length === 1 && dragging) {
-    rotY += (e.touches[0].clientX - px) * 0.012;
-    rotX += (e.touches[0].clientY - py) * 0.012;
+    rotY += (e.touches[0].clientX - px) * 0.01;
+    rotX += (e.touches[0].clientY - py) * 0.01;
     px = e.touches[0].clientX; py = e.touches[0].clientY;
   } else if (e.touches.length === 2) {
     const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-    scale = Math.max(0.4, Math.min(2.8, scale * (d / prevDist)));
+    scale = Math.max(0.4, Math.min(2.5, scale * (d / prevDist)));
     prevDist = d;
   }
-}, { passive: false });
+}, { passive: true });
 
 canvas.addEventListener('touchend',  () => { dragging = false; });
 canvas.addEventListener('mousedown', e  => { dragging = true; px = e.clientX; py = e.clientY; });
 canvas.addEventListener('mousemove', e  => {
   if (!dragging) return;
-  rotY += (e.clientX - px) * 0.008;
-  rotX += (e.clientY - py) * 0.008;
+  rotY += (e.clientX - px) * 0.007;
+  rotX += (e.clientY - py) * 0.007;
   px = e.clientX; py = e.clientY;
 });
 canvas.addEventListener('mouseup',  () => { dragging = false; });
-canvas.addEventListener('wheel', e => { scale = Math.max(0.4, Math.min(2.8, scale - e.deltaY * 0.001)); });
 
-// ---- Ana döngü ----
 function animate() {
   requestAnimationFrame(animate);
 
   if (animStart !== null) {
     const elapsed = performance.now() - animStart;
-    const t = Math.min(elapsed / ANIM_DURATION, 1); // 0..1 global zaman
+    const t = Math.min(elapsed / ANIM_DURATION, 1);
 
     for (const { mat, phase } of lines) {
-      // phase=0: ilk görünen, phase=1: en son görünen
-      // Her çizginin kendi başlangıç zamanı
       const startT = phase * (1 - RAMP);
       const localT = Math.max(0, Math.min(1, (t - startT) / RAMP));
-      mat.opacity  = easeInOutSine(localT) * 0.82;
+      mat.opacity  = easeInOutSine(localT) * 0.8;
     }
 
     if (t >= 1) {
       animStart = null;
-      btn.textContent = 'OLUŞTUR';
+      btn.textContent = 'TEKRARLA';
       btn.style.pointerEvents = 'auto';
+      btn.style.opacity = '1';
     }
   }
 
