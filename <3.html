@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Heart Surface - Higher & Smaller</title>
+<title>Heart Surface - Compact & Top</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -21,7 +21,7 @@
     font-size: 12px;
     line-height: 1.6;
     text-align: center;
-    padding: 15px 20px 5px;
+    padding: 20px 20px 5px;
     text-shadow: 0 0 10px rgba(255, 80, 140, 0.5);
     letter-spacing: 0.5px;
     pointer-events: none;
@@ -36,7 +36,7 @@
     font-size: 11px;
     letter-spacing: 1.5px;
     cursor: pointer;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     font-family: 'Georgia', serif;
     transition: all 0.3s;
     z-index: 10;
@@ -45,7 +45,7 @@
     border-color: rgba(255, 100, 160, 0.9);
     color: rgba(255, 200, 230, 1);
   }
-  #canvas { flex: 1; display: block; width: 100%; margin-top: -30px; }
+  #canvas { flex: 1; display: block; width: 100%; }
 </style>
 </head>
 <body>
@@ -75,9 +75,11 @@ renderer.setClearColor(0x000000, 1);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const scene  = new THREE.Scene();
-// camera.position y = -4.5 (daha yukarı kaydırır), z = 19 (daha çok küçültür)
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / getH(), 0.1, 100);
-camera.position.set(0, -4.5, 19); 
+
+// y = -7.5 (Kamerayı aşağı indirerek kalbi yukarı taşıdık)
+// z = 26 (Nesneyi daha da küçülttük)
+const camera = new THREE.PerspectiveCamera(40, window.innerWidth / getH(), 0.1, 100);
+camera.position.set(0, -7.5, 26); 
 camera.lookAt(0, 0, 0);
 
 function resize() {
